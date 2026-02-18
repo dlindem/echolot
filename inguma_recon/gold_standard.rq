@@ -1,0 +1,13 @@
+PREFIX iwb: <https://wikibase.inguma.eus/entity/>
+PREFIX idp: <https://wikibase.inguma.eus/prop/direct/>
+PREFIX ip: <https://wikibase.inguma.eus/prop/>
+PREFIX ips: <https://wikibase.inguma.eus/prop/statement/>
+PREFIX ipq: <https://wikibase.inguma.eus/prop/qualifier/>
+
+select ?author ?wikidata ?authorname ?gender (group_concat(distinct ?aff) as ?affs) (group_concat(distinct ?arglabel) as ?argitalpenak) (MIN(YEAR(?date)) as ?year)
+where {
+  ?author idp:P5 iwb:Q5; rdfs:label ?authorname; idp:P1 ?wikidata. filter(lang(?authorname)="eu")
+  optional {?author idp:P50 [rdfs:label ?gender]. filter(lang(?gender)="en")}
+  optional {?author idp:P61 [rdfs:label ?aff]. filter(lang(?aff)="eu")}
+  ?arg idp:P17 ?author; idp:P19 ?date; rdfs:label ?arglabel. filter(lang(?arglabel)="eu")
+ } group by ?author ?wikidata ?authorname ?gender ?affs ?argitalpenak ?year
