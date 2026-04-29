@@ -11,3 +11,21 @@ where {
   optional {?author idp:P61 [rdfs:label ?aff]. filter(lang(?aff)="eu")}
   ?arg idp:P17 ?author; idp:P19 ?date; rdfs:label ?arglabel. filter(lang(?arglabel)="eu")
  } group by ?author ?authorname ?gender ?affs ?argitalpenak ?year
+
+_________________________________________________________________________________________________________
+
+PREFIX iwb: <https://wikibase.inguma.eus/entity/>
+PREFIX idp: <https://wikibase.inguma.eus/prop/direct/>
+PREFIX ip: <https://wikibase.inguma.eus/prop/>
+PREFIX ips: <https://wikibase.inguma.eus/prop/statement/>
+PREFIX ipq: <https://wikibase.inguma.eus/prop/qualifier/>
+
+select ?author ?authorname ?gender (group_concat(distinct ?aff) as ?affiliations) (group_concat(distinct ?publabel) as ?publications) (MIN(YEAR(?date)) as ?oldest_publication_year) (MAX(YEAR(?date)) as ?newest_publication_year)
+where {
+  ?author idp:P5 iwb:Q5; rdfs:label ?authorname. # filter not exists {?author ip:P1 [].}
+  filter(lang(?authorname)="eu")
+  optional {?author idp:P50 [rdfs:label ?gender]. filter(lang(?gender)="en")}
+  optional {?author idp:P61 [rdfs:label ?aff]. filter(lang(?aff)="eu")}
+  ?pub idp:P17 ?author; idp:P19 ?date; rdfs:label ?publabel. filter(lang(?publabel)="eu")
+ } group by ?author ?authorname ?gender ?affiliations ?publications ?oldest_publication_year ?newest_publication_year
+# limit 10000
