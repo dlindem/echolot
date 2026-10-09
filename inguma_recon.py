@@ -3,7 +3,7 @@ import time
 from wikidata_query import wikidata_query
 import json, csv, time
 
-with open('inguma_recon/gold_standard.csv') as csvfile:
+with open('UEU/gold_standard.csv') as csvfile:
     reader = csv.DictReader(csvfile)
     counter = 0
     for row in reader:
@@ -26,6 +26,6 @@ with open('inguma_recon/gold_standard.csv') as csvfile:
             print(f"No results for {row['authorname']}")
 
         resultline = {'person': row['author'], 'name': row['authorname'], 'found as result': count, 'result': results}
-        with open('inguma_recon/gold_standard_results_reranked.jsonl', 'a') as outfile:
+        with open('UEU/gold_standard_results_reranked.jsonl', 'a') as outfile:
             outfile.write(f"{json.dumps(resultline)}\n")
         time.sleep(1)
